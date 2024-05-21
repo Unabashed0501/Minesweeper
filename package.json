@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "install": "npm install @types/node",
+    "start": "ts-node main.ts",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12"
+  }
+}
