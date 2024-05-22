@@ -60,9 +60,30 @@ export class Minesweeper {
         return minePositions;
     }
 
-    cellReavel(row: number, col: number): void {
+    cellReveal(row: number, col: number): void {
+        if (
+            row < 0 ||
+            row >= this.size ||
+            col < 0 ||
+            col >= this.size ||
+            this.visibleBoard[row][col] !== 'O' // Already revealed or flagged cell
+        ) {
+            return;
+        }
+
         this.board[row][col] = this.countAdjacentMines(row, col);
         this.visibleBoard[row][col] = this.board[row][col].toString();
+
+        if (this.board[row][col] === 0) {
+            const directions = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1], [0, 1],
+                [1, -1], [1, 0], [1, 1]
+            ];
+            for (const [dx, dy] of directions) {
+                this.cellReveal(row + dx, col + dy);
+            }
+        }
     }
 
     isGameOver(row: number, col: number): boolean {
@@ -70,6 +91,19 @@ export class Minesweeper {
             return true;
         }
         return false;
+    }
+
+    isGameWon(): boolean {
+        let remainingCells = this.size * this.size - this.mines;
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                if (this.visibleBoard[i][j] === 'O') {
+                    remainingCells--;
+                }
+            }
+        }
+
+        return remainingCells === 0;
     }
 
     countAdjacentMines(row: number, col: number): number {
@@ -100,7 +134,7 @@ export class Minesweeper {
         }
         return false;
     }
-    
+
     flagPlace(row: number, col: number): void {
         this.board[row][col] = -2; // -2 represents a flag
         this.visibleBoard[row][col] = 'F';

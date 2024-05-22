@@ -39,6 +39,12 @@ function startGame() {
                 minesweeper.printCurrentBoard();
             }
 
+            if(minesweeper.isGameWon()){
+                console.log('Congratulations! You won the game!');
+                rl.close();
+                return;
+            }
+
             // Check if the input is valid (within the board size)
             if (row < 0 || row >= minesweeper.size || col < 0 || col >= minesweeper.size) {
                 console.log('Invalid input. Row and column must be within the board size.');
@@ -64,7 +70,7 @@ function startGame() {
                                 return;
                             }
                             else {
-                                minesweeper.cellReavel(row, col);
+                                minesweeper.cellReveal(row, col);
                                 console.log('Updated Board:');
                                 minesweeper.printCurrentBoard();
                             }
