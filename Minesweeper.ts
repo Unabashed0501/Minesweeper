@@ -31,6 +31,14 @@ export class Minesweeper {
         console.log(this.visibleBoard);
     }
 
+    getBoard(): number[][] {
+        return this.board;
+    }
+
+    getVisibleBoard(): string[][] {
+        return this.visibleBoard;
+    }
+
     placeMines(firstClickRow: number, firstClickCol: number): number[][] {
         const minePositions: number[][] = [];
         let remainingMines = this.mines;

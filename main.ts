@@ -46,11 +46,11 @@ function startGame() {
             }
 
             // Check if the input is valid (within the board size)
-            if (row < 0 || row >= minesweeper.size || col < 0 || col >= minesweeper.size) {
+            if (row < 0 || row >= minesweeper.size || col < 0 || col >= minesweeper.size || minesweeper.getVisibleBoard()[row][col] != 'O') {
                 console.log('Invalid input. Row and column must be within the board size.');
             } else {
                 rl.question('Do you want to place a flag? (yes/no): ', (answer) => {
-                    if (answer.toLowerCase() == ('yes' || 'y')) {
+                    if (answer.toLowerCase() == 'yes' || answer.toLowerCase() == 'y'){
                         if (minesweeper) {
                             if(!minesweeper.canPlaceFlag(row, col)){
                                 console.log('Cannot place flag here. Cell is already revealed.');
