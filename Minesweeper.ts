@@ -3,12 +3,14 @@ export class Minesweeper {
     private visibleBoard: string[][];
     size: number;
     mines: number;
+    remainingCells: number;
 
     constructor(size: number, mines: number) {
         this.size = size;
         this.mines = mines;
         this.board = this.generateBoard(size);
         this.visibleBoard = this.generateVisibleBoard(size);
+        this.remainingCells = size * size - mines;
     }
 
     generateBoard(size: number): number[][] {
@@ -102,16 +104,7 @@ export class Minesweeper {
     }
 
     isGameWon(): boolean {
-        let remainingCells = this.size * this.size - this.mines;
-        for (let i = 0; i < this.size; i++) {
-            for (let j = 0; j < this.size; j++) {
-                if (this.visibleBoard[i][j] === 'O') {
-                    remainingCells--;
-                }
-            }
-        }
-
-        return remainingCells === 0;
+        return this.remainingCells === 0;
     }
 
     countAdjacentMines(row: number, col: number): number {
