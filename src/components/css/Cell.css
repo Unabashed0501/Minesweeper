@@ -1,0 +1,20 @@
+* {
+  font-family: 'Futura';
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  justify-content: "center";
+  align-items: "center";
+  display: "flex";
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+;
+
+.cell:hover {
+  cursor: pointer;
+}
