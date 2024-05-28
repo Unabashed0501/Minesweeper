@@ -27,20 +27,20 @@ const MineSweeper: React.FC = () => {
     return (
         <div className='mineSweeper'>
             {startGame ? (
-                <Board 
+                <Board
                     boardSize={boardSize}
                     mineNum={mineNum}
                     backToHome={backToHomeOnClick}
                 />
             ) : (
-                <HomePage 
+                <HomePage
                     startGameOnClick={startGameOnClick}
                     mineNumOnChange={mineNumOnChange}
                     boardSizeOnChange={boardSizeOnChange}
                     mineNum={mineNum}
                     boardSize={boardSize}
                 />
-            )} 
+            )}
         </div>
     );
 };

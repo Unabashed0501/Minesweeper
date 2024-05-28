@@ -6,6 +6,7 @@ import Dashboard from './Dashboard';
 // import createBoard from '../utils/createBoard';
 import React, { useEffect, useState } from 'react';
 import { Minesweeper } from '../model/Minesweeper';
+import axios from 'axios';
 
 interface BoardProps {
     boardSize: number;
@@ -16,18 +17,18 @@ interface BoardProps {
 interface CellDetail {
     value: number | '💣';       // To store the number of mines around the cell or '💣' if it's a mine.
     revealed: boolean;          // To store if the cell is revealed.
-    x: number;                  
-    y: number;                  
+    x: number;
+    y: number;
     flagged: boolean;           // To store if the cell is flagged.
 }
 
 const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
     const newGame = new Minesweeper(boardSize, mineNum);
-    const [minesweeper, setMinesweeper] = useState<Minesweeper | null>(newGame);
-    const [board, setBoard] = useState<CellDetail[][]>([]);                     
+    // const [minesweeper, setMinesweeper] = useState<Minesweeper | null>(newGame);
+    const [board, setBoard] = useState<CellDetail[][]>([]);
     // const [nonMineCount, setNonMineCount] = useState<number>(0);        
-    // const [remainFlagNum, setRemainFlagNum] = useState<number>(0);      
-    const [gameOver, setGameOver] = useState<boolean>(false);           
+    const [remainFlagNum, setRemainFlagNum] = useState<number>(0);
+    const [gameOver, setGameOver] = useState<boolean>(false);
     const [win, setWin] = useState<boolean>(false);
 
     useEffect(() => {
@@ -35,10 +36,16 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
     }, []);
 
     // Creating a board
-    const freshBoard = () => {
-        const newGame = new Minesweeper(boardSize, mineNum);
-        setMinesweeper(newGame);
-        setBoard(newGame.createBoard().board)
+    const freshBoard = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/new-game', { boardSize: boardSize, mineNum: mineNum });
+            setBoard(response.data.board);
+            setRemainFlagNum(mineNum);
+            setGameOver(false);
+            setWin(false);
+        } catch (error) {
+            console.error('Error starting game:', error);
+        }
     };
 
     const restartGame = () => {
@@ -48,62 +55,44 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
     };
 
     // On Right Click / Flag Cell
-    const updateFlag = (e: React.MouseEvent, x: number, y: number) => {
+    const updateFlag = async (e: React.MouseEvent, x: number, y: number) => {
         e.preventDefault();
         let newBoard = JSON.parse(JSON.stringify(board));
-        if (!minesweeper) return;
-        let newFlagNum = minesweeper.getRemainFlagNum();
-
-        if (!board[x][y].revealed && newFlagNum >= 0) {
-            if(newFlagNum === 0) {
-                if(board[x][y].flagged){
-                    newBoard[x][y].flagged = false;
-                    minesweeper.setRemainFlagNum(newFlagNum + 1);
-                }
-            }
-            else{
-                if (!board[x][y].flagged) {
-                    newBoard[x][y].flagged = true;
-                    minesweeper.setRemainFlagNum(newFlagNum - 1);
-                } 
-                else {
-                    newBoard[x][y].flagged = false;
-                    minesweeper.setRemainFlagNum(newFlagNum + 1);
-                } 
-            }
-            
-            setBoard(newBoard);
+        // if (!minesweeper) return;
+        console.log('updateFlag');
+        // if (board[x][y].revealed) return;
+        try {
+            const response = await axios.post('http://localhost:8080/api/place-flag', { x, y });
+            setBoard(response.data.board);
+            setRemainFlagNum(response.data.remainFlagNum);
+        } catch (error) {
+            console.error('Error updating flag:', error);
         }
     };
 
-    const revealCell = (x: number, y: number) => {
+    const revealCell = async (x: number, y: number) => {
         if (board[x][y].revealed || gameOver || board[x][y].flagged) return;
-        let newBoard = JSON.parse(JSON.stringify(board));
-        if (!minesweeper) return;
-        let e = minesweeper.revealed(newBoard, x, y, minesweeper.getNonMineCount());
-        newBoard = e.board;
-        setBoard(newBoard);
-        minesweeper!.setNonMineCount(e.newNonMinesCount);
-
-        if (board[x][y].value === '💣') {
-            setGameOver(true);
-        }
-
-        if (e.newNonMinesCount === 0) {
-            setWin(true);
+        try {
+            const response = await axios.post('http://localhost:8080/api/reveal-cell', { x, y });
+            setBoard(response.data.board);
+            setGameOver(response.data.gameOver);
+            setWin(response.data.win);
+        } catch (error) {
+            console.error('Error revealing cell:', error);
         }
     };
 
     return (
         <div className='boardPage'>
+            <div className='modalBtn' onClick={backToHome}>Back to Home</div>
             <div className='boardWrapper'>
                 <div className='boardContainer'>
-                    <Dashboard 
-                        remainFlagNum={minesweeper!.getRemainFlagNum()}
+                    <Dashboard
+                        remainFlagNum={remainFlagNum}
                         gameOver={gameOver}
                         win={win}
                     />
-                    
+
                     {board.map((row, rowIdx) => {
                         return (
                             <div key={rowIdx} style={{ display: "flex" }}>
@@ -125,7 +114,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
                 </div>
 
                 {(gameOver || win) && (
-                    <Modal 
+                    <Modal
                         restartGame={restartGame}
                         backToHome={backToHome}
                         win={win}
