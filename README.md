@@ -25,7 +25,7 @@ These instructions will help you set up and run the Minesweeper game on your loc
 Install the dependencies using Yarn:
 
 ```
-yarn install
+yarn install:all
 ```
 
 ### Running the Game
@@ -35,13 +35,19 @@ To start the game, run the following command:
 ```
 yarn start
 ```
+Open another terminal and run the server:
+
+```
+yarn server
+```
 
 ### Project Structure
 
 - src/components: Contains React components for the game such as Board, Cell, Dashboard, and Modal.
-- src/model: Contains the Minesweeper class that manages the game logic.
-- src/utils: Contains utility functions like createBoard and reveal.
+- src/containers: Contains the Main page of the whole functions and components
 - src/css: Contains CSS files for styling the components.
+- server/src/Minesweeper.tsx: Contains the Minesweeper class that manages the game logic.
+- server/src/utils: Contains utility functions like createBoard and reveal.
 
 ### How to Play
 - Select a board size and number of mines.
