@@ -28,6 +28,7 @@ export class Minesweeper {
     private nonMineCount: number;
     private remainFlagNum: number;
     private gameOver: boolean;
+    private firstClick: boolean;
 
     constructor(boardSize: number, mineNum: number) {
         this.boardSize = boardSize;
@@ -38,6 +39,7 @@ export class Minesweeper {
         this.nonMineCount = boardSize * boardSize - mineNum;
         this.remainFlagNum = mineNum;
         this.gameOver = false;
+        this.firstClick = true;
     }
 
     createBoard = (): NewBoard => {
@@ -69,14 +71,20 @@ export class Minesweeper {
             board.push(subCol);
         }
 
+        return { board, mineLocations };
+    };
+
+
+    placeMines(firstClickRow: number, firstClickCol: number): void {
         // Random bombs locations
+        let mineLocations: [number, number][] = [];
         let mineCount = 0;
         while (mineCount < this.mineNum) {
             let x = randomNum(0, this.boardSize - 1);
             let y = randomNum(0, this.boardSize - 1);
 
-            if (board[x][y].value === 0) {            // Check this location has not been located a mine.
-                board[x][y].value = '💣';           // Change the value of the cell to '💣'
+            if (this.board[x][y].value === 0 && (x != firstClickRow || y != firstClickCol)) {            // Check this location has not been located a mine.
+                this.board[x][y].value = '💣';           // Change the value of the cell to '💣'
                 mineLocations.push([x, y]);
                 mineCount++;
             }
@@ -84,49 +92,26 @@ export class Minesweeper {
 
         for (let r = 0; r < this.boardSize; r++) {
             for (let c = 0; c < this.boardSize; c++) {
-                if (board[r][c].value === '💣') continue;
+                if (this.board[r][c].value === '💣') continue;
                 // Top
-                if (r > 0 && board[r - 1][c].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (r > 0 && this.board[r - 1][c].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Top Right
-                if (r > 0 && c < this.boardSize - 1 && board[r - 1][c + 1].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (r > 0 && c < this.boardSize - 1 && this.board[r - 1][c + 1].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Right
-                if (c < this.boardSize - 1 && board[r][c + 1].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (c < this.boardSize - 1 && this.board[r][c + 1].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Bottom Right
-                if (r < this.boardSize - 1 && c < this.boardSize - 1 && board[r + 1][c + 1].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (r < this.boardSize - 1 && c < this.boardSize - 1 && this.board[r + 1][c + 1].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Bottom
-                if (r < this.boardSize - 1 && board[r + 1][c].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (r < this.boardSize - 1 && this.board[r + 1][c].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Bottom Left
-                if (r < this.boardSize - 1 && c > 0 && board[r + 1][c - 1].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (r < this.boardSize - 1 && c > 0 && this.board[r + 1][c - 1].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Left
-                if (c > 0 && board[r][c - 1].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (c > 0 && this.board[r][c - 1].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
                 // Top Left
-                if (r > 0 && c > 0 && board[r - 1][c - 1].value === '💣') board[r][c].value = (board[r][c].value as number) + 1;
+                if (r > 0 && c > 0 && this.board[r - 1][c - 1].value === '💣') this.board[r][c].value = (this.board[r][c].value as number) + 1;
             }
         }
-
-        return { board, mineLocations };
-    };
-
-
-    // placeMines(firstClickRow: number, firstClickCol: number): void {
-    //     let remainingMines = this.mines;
-
-    //     while (remainingMines > 0) {
-    //         const row = Math.floor(Math.random() * this.size);
-    //         const col = Math.floor(Math.random() * this.size);
-
-    //         if (row === firstClickRow && col === firstClickCol) {
-    //             continue; // Skip placing mine on the first clicked cell
-    //         }
-
-    //         if (this.board[row][col].value === -1) {
-    //             continue; // Mine already placed at this position
-    //         }
-
-    //         this.board[row][col].value = '💣'; 
-    //         remainingMines--;
-    //     }
-    // }
+    }
 
     revealed = (board: Cell[][], x: number, y: number, newNonMinesCount: number): RevealResult => {
         board[x][y].revealed = true;
@@ -162,6 +147,10 @@ export class Minesweeper {
 
     revealCell = (x: number, y: number) => {
         // if (this.board[x][y].revealed || this.gameOver || this.board[x][y].flagged) return;
+        if (this.firstClick) {
+            this.placeMines(x, y);
+            this.firstClick = false;
+        }
         let newBoard = JSON.parse(JSON.stringify(this.board));
         let e = this.revealed(newBoard, x, y, this.nonMineCount);
         newBoard = e.board;
