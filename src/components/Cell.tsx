@@ -28,6 +28,7 @@ const Cell: React.FC<CellProps> = ({ rowIdx, colIdx, detail, updateFlag, revealC
         border: detail.revealed ? "2px inset darkgrey" : "2px outset white",
         width: cellSize,
         height: cellSize,
+        fontSize: ((parseFloat(cellSize) * 0.9)) + 'px',
     };
 
     const ID = `${rowIdx}-${colIdx}`;
