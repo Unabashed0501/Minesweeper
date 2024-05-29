@@ -13,9 +13,11 @@ interface CellProps {
     };
     updateFlag: (e: React.MouseEvent, x: number, y: number) => void;
     revealCell: (x: number, y: number) => void;
+    cellSize: string;
 }
 
-const Cell: React.FC<CellProps> = ({ rowIdx, colIdx, detail, updateFlag, revealCell }) => {
+const Cell: React.FC<CellProps> = ({ rowIdx, colIdx, detail, updateFlag, revealCell, cellSize }) => {
+    console.log(cellSize)
     const cellStyle: React.CSSProperties = {
         background: detail.revealed
             ? detail.value === '💣' 
@@ -24,6 +26,8 @@ const Cell: React.FC<CellProps> = ({ rowIdx, colIdx, detail, updateFlag, revealC
             : checkPattern(detail.x, detail.y),
         color: numColorCode(detail.value),
         border: detail.revealed ? "2px inset darkgrey" : "2px outset white",
+        width: cellSize,
+        height: cellSize,
     };
 
     const ID = `${rowIdx}-${colIdx}`;

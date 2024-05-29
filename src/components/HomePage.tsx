@@ -48,14 +48,14 @@ const HomePage: React.FC<HomePageProps> = ({ startGameOnClick, mineNumOnChange, 
                     <div className='error' style={getErrorStyle()}>{errorMessage}</div>
                     <div className='controlCol'>
                         <p className='controlTitle'>Mines Number</p>
-                        <input type='range' min='2' max='30' defaultValue='10'
+                        <input type='range' min='2' max='50' defaultValue='10'
                             onChange={(e) => mineNumOnChange(Number(e.target.value))}>
                         </input>
                         <p className='controlNum' style={getColorStyle()}>{mineNum}</p>
                     </div>
                     <div className='controlCol'>
                         <p className='controlTitle'>Board Size (nxn)</p>
-                        <input type='range' min='2' max='16' defaultValue='8'
+                        <input type='range' min='2' max='40' defaultValue='8'
                             onChange={(e) => boardSizeOnChange(Number(e.target.value))}>
                         </input>
                         <p className='controlNum' style={getColorStyle()}>{boardSize}</p>

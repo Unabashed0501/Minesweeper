@@ -82,9 +82,21 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
         }
     };
 
+    const getCellSize = () => {
+        if(boardSize > 20){
+            if(boardSize > 30){
+                return "15px";
+            }
+            return "20px";
+        }
+        return "30px";
+    }
+
     return (
         <div className='boardPage'>
-            <div className='modalBtn' onClick={backToHome}>Back to Home</div>
+            <div className='btnWrapper'>
+                <div className='modalBtn' onClick={backToHome}>Back to Home</div>
+            </div>
             <div className='boardWrapper'>
                 <div className='boardContainer'>
                     <Dashboard
@@ -105,6 +117,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
                                             detail={col}
                                             updateFlag={updateFlag}
                                             revealCell={revealCell}
+                                            cellSize={getCellSize()}
                                         />
                                     );
                                 })}

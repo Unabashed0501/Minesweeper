@@ -4,26 +4,52 @@
 
 .boardPage {
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center;
+    height: 100vh;
 }
 
 .boardWrapper {
-    position: absolute;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-
-
+    height: 100%;
+    margin: 0;
 }
 
 .boardContainer {
     border: 10px solid darkgray;
     border-radius: 10px;
     background-color: darkgrey;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-
-    margin: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    align-items: center;
+    margin: 10px;
+    /* max-width: 50%;
+    max-height: 50%; */
 }
+
+.btnWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    /* border: 5px solid black; */
+    width: 100%;
+    /* position: relative; */
+    top: 3vh;
+}
+
+
+.modalBtn {
+    /* margin-top: 100vh; 
+    margin-left: 50vw; */
+    width: 100%;
+    height: 100%;
+}
+
