@@ -1,7 +1,6 @@
 FROM node:16-alpine
 
-ENV PORT 8080
-EXPOSE ${PORT}
+EXPOSE 8080
 
 COPY . /app
 WORKDIR /app
