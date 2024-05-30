@@ -8,6 +8,8 @@ import React, { useEffect, useState } from 'react';
 import { Minesweeper } from '../model/Minesweeper';
 import axios from 'axios';
 
+const PORT = process.env.PORT || 8080;
+
 interface BoardProps {
     boardSize: number;
     mineNum: number;
@@ -38,7 +40,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
     // Creating a board
     const freshBoard = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/api/new-game', { boardSize: boardSize, mineNum: mineNum });
+            const response = await axios.post(`http://localhost:${PORT}/api/new-game`, { boardSize: boardSize, mineNum: mineNum });
             setBoard(response.data.board);
             setRemainFlagNum(mineNum);
             setGameOver(false);
@@ -62,7 +64,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
         console.log('updateFlag');
         // if (board[x][y].revealed) return;
         try {
-            const response = await axios.post('http://localhost:8080/api/place-flag', { x, y });
+            const response = await axios.post(`http://localhost:${PORT}/api/place-flag`, { x, y });
             setBoard(response.data.board);
             setRemainFlagNum(response.data.remainFlagNum);
         } catch (error) {
@@ -73,7 +75,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, mineNum, backToHome }) => {
     const revealCell = async (x: number, y: number) => {
         if (board[x][y].revealed || gameOver || board[x][y].flagged) return;
         try {
-            const response = await axios.post('http://localhost:8080/api/reveal-cell', { x, y });
+            const response = await axios.post(`http://localhost:${PORT}/api/reveal-cell`, { x, y });
             setBoard(response.data.board);
             setGameOver(response.data.gameOver);
             setWin(response.data.win);
