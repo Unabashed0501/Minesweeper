@@ -13,9 +13,9 @@ app.use(cors());
 // parse application/json
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, "../..", "public")))
+app.use(express.static(path.join(__dirname, "../..", "build")))
 app.get("*", (_: any, res: any) => {
-  res.sendFile(path.join(__dirname, "../..", "public", "index.html"))
+  res.sendFile(path.join(__dirname, "../..", "build", "index.html"))
 })
 
 let minesweeper: Minesweeper | null = null;
