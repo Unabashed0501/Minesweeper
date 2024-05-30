@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import path from "path";
 import bodyParser from 'body-parser';
 import { Minesweeper } from './Minesweeper';
 
@@ -11,6 +12,11 @@ app.use(cors());
 
 // parse application/json
 app.use(bodyParser.json());
+
+app.use(express.static(path.join(__dirname, "../..", "public")))
+app.get("*", (_: any, res: any) => {
+  res.sendFile(path.join(__dirname, "../..", "public", "index.html"))
+})
 
 let minesweeper: Minesweeper | null = null;
 
