@@ -4,6 +4,7 @@ ENV PORT 8080
 EXPOSE 8080
 
 COPY . /app
+COPY .env /app/.env
 WORKDIR /app
 
 RUN yarn install:all

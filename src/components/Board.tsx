@@ -7,8 +7,11 @@ import Dashboard from './Dashboard';
 import React, { useEffect, useState } from 'react';
 import { Minesweeper } from '../model/Minesweeper';
 import axios from 'axios';
+// import dotenv from 'dotenv';
+// dotenv.config();
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
+console.log('PORT:', PORT);
 
 interface BoardProps {
     boardSize: number;
