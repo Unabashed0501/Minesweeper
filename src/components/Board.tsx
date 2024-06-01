@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Minesweeper } from '../model/Minesweeper';
 import axios from 'axios';
 
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
 
 interface BoardProps {
     boardSize: number;
